@@ -1,0 +1,23 @@
+#! /bin/bash
+
+usage() {
+  echo "usage: git sensitive <filename>"
+}
+
+main() {
+  if [ "$1" = "-h" ]; then
+    usage
+    exit 0
+  elif [ "$1" = "" ]; then
+    echo "error: no pattern given."
+    echo ""
+    usage
+    exit 0
+  fi
+
+  git filter-branch --force --index-filter \
+    "git rm --cached --ignore-unmatch $1" \
+    --prune-empty --tag-name-filter cat -- --all
+}
+
+main "$@"
